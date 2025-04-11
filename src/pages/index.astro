@@ -1,12 +1,34 @@
 ---
-// src/pages/index.astro
+// Fetch data in the frontmatter
+const apiUrl = import.meta.env.API_URL || 'http://localhost:4321';
+
+const response = await fetch(`${apiUrl}/items`);
+const { items } = await response.json();
+
+type UserSchema = {
+    name: string; // minLength: 1 enforced at runtime or via validation
+    description: string;
+  };
 ---
 
-<html>
+<!doctype html>
+<html lang="en">
   <head>
-    <title>Hello from Bun + Astro</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Items List</title>
   </head>
   <body>
-    <h1>Hello, world! 🌍</h1>
+    <h1>Items List</h1>
+    <ul>
+      <!-- Loop through items and display them -->
+      {
+        items.map((item: UserSchema) => (
+          <li>
+            {item.name} 🚀 {item.description}
+          </li>
+        ))
+      }
+    </ul>
   </body>
 </html>

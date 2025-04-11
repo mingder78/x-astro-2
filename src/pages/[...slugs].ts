@@ -1,18 +1,26 @@
 import { Elysia, t } from "elysia";
 import { swagger } from "@elysiajs/swagger";
 
+type UserSchema = {
+    name: string; // minLength: 1 enforced at runtime or via validation
+    description: string;
+  };
+
 // Initialize a Map to store items (id -> item)
-const itemStorage = new Map<string, { id: string; name: string; description: string }>();
+const itemStorage = new Map<
+  string,
+  { id: string; name: string; description: string }
+>();
 
 // Create Elysia app
 const app = new Elysia()
   .use(swagger()) // Use Swagger for API documentation
   // Schema for item validation
-  .group('/items', (app) =>
+  .group("/items", (app) =>
     app
       // CREATE: Add a new item
       .post(
-        '/',
+        "/",
         ({ body }) => {
           const id = crypto.randomUUID(); // Generate unique ID
           const newItem = { id, ...body };
@@ -27,27 +35,25 @@ const app = new Elysia()
         }
       )
       // READ: Get all items
-      .get('/', () => {
+      .get("/", async () => {
         const items = Array.from(itemStorage.values());
+  
         return { success: true, items };
       })
       // READ: Get a single item by ID
-      .get(
-        '/:id',
-        ({ params: { id } }) => {
-          const item = itemStorage.get(id);
-          if (!item) {
-            return { success: false, error: 'Item not found' };
-          }
-          return { success: true, item };
+      .get("/:id", ({ params: { id } }) => {
+        const item = itemStorage.get(id);
+        if (!item) {
+          return { success: false, error: "Item not found" };
         }
-      )
+        return { success: true, item };
+      })
       // UPDATE: Modify an existing item
       .put(
-        '/:id',
+        "/:id",
         ({ params: { id }, body }) => {
           if (!itemStorage.has(id)) {
-            return { success: false, error: 'Item not found' };
+            return { success: false, error: "Item not found" };
           }
           const updatedItem = { id, ...body };
           itemStorage.set(id, updatedItem);
@@ -61,20 +67,17 @@ const app = new Elysia()
         }
       )
       // DELETE: Remove an item
-      .delete(
-        '/:id',
-        ({ params: { id } }) => {
-          if (!itemStorage.has(id)) {
-            return { success: false, error: 'Item not found' };
-          }
-          itemStorage.delete(id);
-          return { success: true };
+      .delete("/:id", ({ params: { id } }) => {
+        if (!itemStorage.has(id)) {
+          return { success: false, error: "Item not found" };
         }
-      )
-    )
-  // Export handler for Astro
-  export const GET = (context: any) => app.handle(context.request);
-  export const POST = (context: any) => app.handle(context.request);
-  export const DELETE = (context: any) => app.handle(context.request);
-  export const PUT = (context: any) => app.handle(context.request);
+        itemStorage.delete(id);
+        return { success: true };
+      })
+  );
   
+// Export handler for Astro
+export const GET = (context: any) => app.handle(context.request);
+export const POST = (context: any) => app.handle(context.request);
+export const DELETE = (context: any) => app.handle(context.request);
+export const PUT = (context: any) => app.handle(context.request);
