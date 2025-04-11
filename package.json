@@ -1,0 +1,19 @@
+{
+  "name": "x-astro-2",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "astro": "^5.6.1"
+  }
+}
