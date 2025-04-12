@@ -1,10 +1,11 @@
 import { Elysia, t } from "elysia";
 import { swagger } from "@elysiajs/swagger";
+import { cors } from "@elysiajs/cors";
 
 type UserSchema = {
-    name: string; // minLength: 1 enforced at runtime or via validation
-    description: string;
-  };
+  name: string; // minLength: 1 enforced at runtime or via validation
+  description: string;
+};
 
 // Initialize a Map to store items (id -> item)
 const itemStorage = new Map<
@@ -14,6 +15,7 @@ const itemStorage = new Map<
 
 // Create Elysia app
 const app = new Elysia()
+  .use(cors())
   .use(swagger()) // Use Swagger for API documentation
   // Schema for item validation
   .group("/items", (app) =>
@@ -37,7 +39,7 @@ const app = new Elysia()
       // READ: Get all items
       .get("/", async () => {
         const items = Array.from(itemStorage.values());
-  
+
         return { success: true, items };
       })
       // READ: Get a single item by ID
@@ -75,7 +77,7 @@ const app = new Elysia()
         return { success: true };
       })
   );
-  
+
 // Export handler for Astro
 export const GET = (context: any) => app.handle(context.request);
 export const POST = (context: any) => app.handle(context.request);
