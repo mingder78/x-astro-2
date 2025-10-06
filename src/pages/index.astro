@@ -1,14 +1,14 @@
 ---
 // Fetch data in the frontmatter
-const apiUrl = import.meta.env.API_URL || 'http://localhost:4321';
+const apiUrl = import.meta.env.API_URL || "http://localhost:4321";
 
 const response = await fetch(`${apiUrl}/api/items`);
-const { items } = await response.json();
+const apiData = await response.json();
 
 type UserSchema = {
-    name: string; // minLength: 1 enforced at runtime or via validation
-    description: string;
-  };
+  name: string; // minLength: 1 enforced at runtime or via validation
+  capital: string;
+};
 ---
 
 <!doctype html>
@@ -19,13 +19,13 @@ type UserSchema = {
     <title>Items List</title>
   </head>
   <body>
-    <h1>Items List</h1>
+    <h1>Countries List</h1>
     <ul>
       <!-- Loop through items and display them -->
       {
-        items.map((item: UserSchema) => (
+        apiData.countries.map((item: UserSchema) => (
           <li>
-            {item.name} 🚀 {item.description}
+            {item.name} 🚀 {item.capital}
           </li>
         ))
       }

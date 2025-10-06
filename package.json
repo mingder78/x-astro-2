@@ -1,7 +1,7 @@
 {
   "name": "x-astro-2",
   "type": "module",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
@@ -19,6 +19,7 @@
     "@elysiajs/cors": "^1.2.0",
     "@elysiajs/swagger": "^1.2.2",
     "astro": "^5.6.1",
-    "elysia": "^1.2.25"
+    "elysia": "^1.2.25",
+    "graphql-request": "^7.2.0"
   }
 }
